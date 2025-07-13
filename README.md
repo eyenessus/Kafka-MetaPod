@@ -5,7 +5,9 @@
 - Substitua `{localhost}` pelo IP que será usado para acessar o broker (exemplo: `127.0.0.1` para localhost).
 
 ```bash
-keytool -keystore server.keystore.jks -alias localhost -validity {validity} -genkey -keyalg RSA -destkeystoretype pkcs12 -ext SAN=DNS:{broker-1},DNS:localhost,IP:{localhost}
+keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -validity 365 -genkey -keyalg RSA -storetype pkcs12
+```
+> Substitua `{broker-1}` pelo nome do broker desejado. O arquivo gerado será `{broker-1}.keystore.jks`.
 ```
 
 ### Generate CA - Certificate Authority
