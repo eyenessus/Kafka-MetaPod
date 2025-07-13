@@ -9,7 +9,7 @@ keytool -keystore server.keystore.jks -alias localhost -validity {validity} -gen
 
 ### Generate CA - Certificate Authority
 ```bash
-openssl req -new -x509 -keyout ca-key -out ca-cert -days 365
+openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM
 ```
 
 ### Add CA so that clients trust this CA
