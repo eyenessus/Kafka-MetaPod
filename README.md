@@ -8,7 +8,7 @@
 keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -validity 365 -genkey -keyalg RSA -storetype pkcs12
 ```
 > Substitua `{broker-1}` pelo nome do broker desejado. O arquivo gerado será `{broker-1}.keystore.jks`.
-```
+
 
 ### Generate CA - Certificate Authority
 ```bash
