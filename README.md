@@ -9,7 +9,6 @@ keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -validity 365 -genke
 ```
 > Substitua `{broker-1}` pelo nome do broker desejado. O arquivo gerado será `{broker-1}.keystore.jks`.
 
-
 ### Generate CA - Certificate Authority
 ```bash
 openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM
