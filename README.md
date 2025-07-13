@@ -16,6 +16,6 @@ openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out ca
 
 ### Add CA so that clients trust this CA
 ```bash
-keytool -keystore client.truststore.jks -alias CARoot -import -file cacert
+keytool -keystore client.truststore.jks -alias CARoot -import -file cacert.pem
 ```
 
