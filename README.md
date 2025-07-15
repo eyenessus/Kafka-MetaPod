@@ -1,13 +1,10 @@
 # Kafka Documentation
 
-### Generate SSL Key and Certificate for each Kafka Broker with SAN
-- Substitua `{broker-1}` pelo nome do broker (exemplo: `broker-1`, `broker-2`, etc).
-- Substitua `{localhost}` pelo IP que será usado para acessar o broker (exemplo: `127.0.0.1` para localhost).
-
+## Create database and serial number file
 ```bash
-keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -validity 365 -genkey -keyalg RSA -storetype pkcs12
+echo 01 > serial.txt
+touch index.txt
 ```
-> Substitua `{broker-1}` pelo nome do broker desejado. O arquivo gerado será `{broker-1}.keystore.jks`.
 
 ### Generate CA - Certificate Authority
 ```bash
@@ -18,8 +15,26 @@ openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out ca
 ```bash
 keytool -keystore client.truststore.jks -alias CARoot -import -file cacert.pem
 ```
-### Provider truststore to brokers it should have all CA certificates that clients keys were signed by.
+
+### Generate SSL Key and Certificate for each Kafka Broker with SAN Temporary
+- Substitua `{broker-1}` pelo nome do broker (exemplo: `broker-1`, `broker-2`, etc).
+- Substitua `{localhost}` pelo IP que será usado para acessar o broker (exemplo: `127.0.0.1` para localhost).
+
 ```bash
-keytool -keystore server.truststore.jks -alias CARoot -import -file ca-cert 
+keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -validity {validity} -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:broker-1,DNS:localhost,IP:127.0.0.1
 ```
 
+## Generate CSR CERTIFICATE SIGNING REQUEST of Broker
+```bash
+keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -certreq -file {broker-1}.csr -ext SAN=DNS:broker-1,DNS:localhost,IP:127.0.0.1
+```
+
+### Provider truststore to each brokers it should have all CA certificates that clients keys were signed by.
+```bash
+keytool -keystore server.truststore.jks -alias CARoot -import -file cacert.pem
+```
+
+### Sign it with the CA
+```bash
+openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out {broker-1}.crt -infiles {broker-1}.csr
+```
