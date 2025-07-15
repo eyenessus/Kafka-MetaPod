@@ -29,12 +29,19 @@ keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -validity {validity}
 keytool -keystore {broker-1}.keystore.jks -alias {broker-1} -certreq -file {broker-1}.csr -ext SAN=DNS:broker-1,DNS:localhost,IP:127.0.0.1
 ```
 
-### Provider truststore to each brokers it should have all CA certificates that clients keys were signed by.
-```bash
-keytool -keystore server.truststore.jks -alias CARoot -import -file cacert.pem
-```
-
 ### Sign it with the CA
 ```bash
 openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out {broker-1}.crt -infiles {broker-1}.csr
 ```
+
+## Need to import both the certificate of the CA and the signed certificate into the keystore
+```bash
+keytool -keystore broker/{broker-1}.keystore.jks -alias CARoot -import -file ca/cacert.pem
+keytool -keystore {keystore} -alias {broker-1}.keystore.jks -import -file broker/{broker-1}.crt
+```
+
+### Provider truststore to each brokers it should have all CA certificates that clients keys were signed by.
+```bash
+keytool -keystore {broker-1}.truststore.jks -alias CARoot -import -file cacert.pem
+```
+
